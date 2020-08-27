@@ -47,3 +47,5 @@ Step 13) Using MatchIndex we are mentioning the index of the images.
 Step 14) If the compared images are same then we are creating a bounding box around the face and printing the name.
 
 Step 15) Using imshow we are displaying the output.
+
+This method can be used for recognising frontal images, non-frontal images, faces in dim light and for blocked faces.
