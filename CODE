@@ -1,0 +1,78 @@
+import face_recognition
+import cv2
+import numpy as np
+import os
+#reading images from the folder
+path = 'dataset_path'
+images = []
+classNames = []
+myList = os.listdir(path) #list of directory
+print(myList)
+images = [] # gives np values of the images
+classNames = [] # contains the names without extention
+for cls in myList:
+    currentImg = cv2.imread(f'{path}/{cls}')
+    images.append(currentImg)
+    classNames.append(os.path.splitext(cls)[0])
+#print(images)
+print(classNames)   
+#to encode all the images
+def findEncodings(images):
+    encodeList = []
+    for img in images:
+        img=cv2.cvtColor(img,cv2.COLOR_BGR2RGB) #face_recognition library reads images in RGB format
+        encode = face_recognition.face_encodings(img)[0] #0 - single image
+        encodeList.append(encode)
+    return encodeList
+
+encodeListKnown = findEncodings(images)
+print(len(encodeListKnown))  
+print('Encoding Complete')
+
+#to compare the encoded image
+cap = cv2.VideoCapture(0)  # reading image from webcam
+img = cv2.imread("image.jpg") # reading image file.
+while True:
+    success,img = cap.read() # reading the image from webcam  # comment this line while reading an image file.
+    imgSmall = cv2.resize(img,(0,0),None,1,1) 
+    img = cv2.cvtColor(imgSmall,cv2.COLOR_BGR2RGB)
+    facesCurFrame = face_recognition.face_locations(imgSmall) #finding coordinates of the detected face
+    encodesCurFrame = face_recognition.face_encodings(imgSmall,facesCurFrame) #encode the face
+    
+    #comparing images from the folder and the image from webcam and find the measurement distance
+    for encodeFace,faceLoc in zip(encodesCurFrame,facesCurFrame):
+        matches = face_recognition.compare_faces(encodeListKnown,encodeFace)
+        faceDir = face_recognition.face_distance(encodeListKnown,encodeFace)
+        #print(faceDir)
+        matchIndex = np.argmin(faceDir)  #gives index values
+        
+        
+         #creating bounding box around the face
+
+        if matches[matchIndex]:
+            name = classNames[matchIndex].lower()
+            print(name)
+            y1,x2,y2,x1= faceLoc #coordinates
+            #y1,x2,y2,x1 = y1*2,x2*2,y2*2,x1*2
+            cv2.rectangle(img,(x1,y1),(x2,y2),(0,255,0),2) #cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+            cv2.rectangle(img,(x1,y2-35),(x2,y2),(0,255,0),cv2.FILLED)
+            cv2.putText(img,name,(x1+6,y2-6), cv2.FONT_HERSHEY_COMPLEX,1,(255,255,255),2)
+            
+        else:
+            print("Unknown")
+            y1,x2,y2,x1= faceLoc
+            cv2.rectangle(img,(x1,y1),(x2,y2),(0,255,0),2) #cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+            cv2.rectangle(img,(x1,y2-35),(x2,y2),(0,255,0),cv2.FILLED)
+            cv2.putText(img,"UNKNOWN",(x1+6,y2-6), cv2.FONT_HERSHEY_COMPLEX,1,(255,255,255),2)
+            
+            
+    cv2.imshow('Webcam',img)
+    #cv2.imshow("face",nameList)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+cap.release()
+cv2.destroyAllWindows()
+
+
+
+
