@@ -30,7 +30,7 @@ print(len(encodeListKnown))
 print('Encoding Complete')
 
 #to compare the encoded image
-cap = cv2.VideoCapture(0)  # reading image from webcam
+cap = cv2.VideoCapture(0)  # reading image from webcam . No need to comment this line when u are giving an image file because we have used cap.release to close the output frame.
 img = cv2.imread("image.jpg") # reading image file.
 while True:
     success,img = cap.read() # reading the image from webcam  # comment this line while reading an image file.
@@ -53,7 +53,7 @@ while True:
             name = classNames[matchIndex].lower()
             print(name)
             y1,x2,y2,x1= faceLoc #coordinates
-            #y1,x2,y2,x1 = y1*2,x2*2,y2*2,x1*2
+            #y1,x2,y2,x1 = y1*2,x2*2,y2*2,x1*2  #uncomment this line if the bounding box doesn't appear around the face and if the bounding box is not on the face try changing the numbers used to multiple.
             cv2.rectangle(img,(x1,y1),(x2,y2),(0,255,0),2) #cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
             cv2.rectangle(img,(x1,y2-35),(x2,y2),(0,255,0),cv2.FILLED)
             cv2.putText(img,name,(x1+6,y2-6), cv2.FONT_HERSHEY_COMPLEX,1,(255,255,255),2)
