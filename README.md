@@ -18,7 +18,8 @@ Steps to implement the code:
 
 Step 1) Import all the required libraries.
 
-Step 2) Mention the dataset path. The main advantage in using face_recognition library is that there is no need to give lots of data. Just one image of each person is enough for recognition. Preferably frontal face images should be given in the folder.
+Step 2) Mention the dataset path. The main advantage in using face_recognition library is that there is no need to give lots of data. Just one image of each person is enough         for recognition. Preferably frontal face images should be given in the folder, if its not detecting when u block your face then try giving a slightly turned face 
+        (not completely). You may also encounter an error saying index out of range if u give an image whose face is completely turned or tilted or blocked face because the           library first has to read all 128 measurement from the face.
 
 Step 3) Reading all the images in the folder.
 
@@ -48,4 +49,4 @@ Step 14) If the compared images are same then we are creating a bounding box aro
 
 Step 15) Using imshow we are displaying the output.
 
-This method can be used for recognising frontal images, non-frontal images, faces in dim light and for blocked faces.
+This method can be used for recognising frontal images, non-frontal images, faces in dim light and also if the face is blocked.
